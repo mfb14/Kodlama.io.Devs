@@ -28,7 +28,7 @@ import kodlama.io.Devs.entities.Language;
  * @since Oct 31, 2022 9:17:50 PM
  */
 @RestController
-@RequestMapping("/language")
+@RequestMapping("/languages")
 public class LanguageRestController {
 
 	LanguageService languageService;
@@ -36,9 +36,9 @@ public class LanguageRestController {
 	public LanguageRestController(LanguageService languageService) {
 		this.languageService = languageService;
 	}
-	@GetMapping
-	public List<Language> getAlL(){
-		return languageService.getAll();
+	@GetMapping()
+	public ResponseEntity<List<Language>> getAlL(){
+		return new ResponseEntity<List<Language>>(languageService.getAll(),HttpStatus.OK);
 	}
 	
 	@PostMapping("/create")

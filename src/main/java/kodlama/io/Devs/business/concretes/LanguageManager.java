@@ -3,7 +3,6 @@
  */
 package kodlama.io.Devs.business.concretes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,13 +40,10 @@ public class LanguageManager implements LanguageService {
 		Language lang = new Language();
 		if(isNameExist(language.getName())) {
 			lang.setName(language.getName());
-			return languageRepository.save(lang);
-			
+			return languageRepository.save(lang);		
 		}
 		else
-			throw new Exception("Language Name is Already Exist!!");
-		
-		
+			throw new Exception("Language Name is Already Exist!!");	
 		
 	}
 
@@ -66,16 +62,11 @@ public class LanguageManager implements LanguageService {
 			throw new Exception("LanguageId is not exist!");
 			
 		
-		
-		
-		
 	}
 
 	@Override
 	public LanguageListResponse findLanguageById(Integer id) {
-		
-		
-		
+
 		return LanguageListResponse.from(languageRepository.findById(id).get());
 	}
 

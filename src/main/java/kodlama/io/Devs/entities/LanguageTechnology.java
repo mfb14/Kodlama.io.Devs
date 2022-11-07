@@ -36,7 +36,7 @@ public class LanguageTechnology {
 	@Column(name ="name" )
 	private String name;
 	
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name="language_id",referencedColumnName = "id")
 	private Language language;
 }
