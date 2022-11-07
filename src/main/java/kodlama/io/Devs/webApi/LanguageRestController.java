@@ -5,6 +5,8 @@ package kodlama.io.Devs.webApi;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kodlama.io.Devs.business.abstracts.LanguageService;
+import kodlama.io.Devs.business.requests.languages.LanguageCreateRequest;
+import kodlama.io.Devs.business.requests.languages.LanguageUpdateRequest;
+import kodlama.io.Devs.business.responses.languages.LanguageListResponse;
 import kodlama.io.Devs.entities.Language;
 
 /**
@@ -37,24 +42,27 @@ public class LanguageRestController {
 	}
 	
 	@PostMapping("/create")
-	public void saveLanguage(@RequestBody Language language) throws Exception {
-		languageService.saveLanguage(language);
+	public ResponseEntity<Language> saveLanguage(@RequestBody LanguageCreateRequest language) throws Exception {
+		return new ResponseEntity<Language>(languageService.save(language), HttpStatus.CREATED);
 	}
-	@PutMapping("/update/{id}")
-	public Language updateLanguage(@RequestParam String language, @PathVariable Integer id) {
-		return languageService.updateLanguage(language, id);
+	
+	@PutMapping("/{id}/update")
+	public ResponseEntity<Language> updateLanguage(@RequestBody LanguageUpdateRequest language,@PathVariable Integer id) throws Exception {
+		return new ResponseEntity<Language>(languageService.updateLanguage(language, id), HttpStatus.OK);
 	}
+	
 	@GetMapping("/name")
-	public Language findLanguageByName(@RequestParam String name) {
-		return languageService.findLanguageByName(name);
+	public ResponseEntity<List<LanguageListResponse>> findLanguageByName(@RequestParam String name) {
+		return new ResponseEntity<List<LanguageListResponse>>(languageService.findLanguageByName(name), HttpStatus.OK);
 	}
 	
 	@GetMapping("/id")
-	public Language findLanguageById(@RequestParam Integer id) {
-		return languageService.findLanguageById(id);
+	public ResponseEntity<LanguageListResponse> findLanguageById(@RequestParam Integer id) {
+		return ResponseEntity.ok(languageService.findLanguageById(id));
 	}
 	@DeleteMapping("/{id}")
-	public void deleteLanguage(@PathVariable Integer id) {
+	public ResponseEntity<Void> deleteLanguage(@PathVariable Integer id) throws Exception {
 		languageService.deleteLanguage(id);
+		return ResponseEntity.noContent().build();
 	}
 }

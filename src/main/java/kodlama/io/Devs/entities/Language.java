@@ -3,16 +3,12 @@
  */
 package kodlama.io.Devs.entities;
 
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,8 +31,6 @@ public class Language {
 	@Column(name = "name")
 	private String name;
 	
-	@OneToMany(mappedBy = "language",fetch = FetchType.LAZY
-									,cascade = CascadeType.ALL)
-	private Set<LanguageTechnology> languageTechnologies;
+
 	
 }

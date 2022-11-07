@@ -5,6 +5,9 @@ package kodlama.io.Devs.business.abstracts;
 
 import java.util.List;
 
+import kodlama.io.Devs.business.requests.languages.LanguageCreateRequest;
+import kodlama.io.Devs.business.requests.languages.LanguageUpdateRequest;
+import kodlama.io.Devs.business.responses.languages.LanguageListResponse;
 import kodlama.io.Devs.entities.Language;
 
 /**
@@ -14,14 +17,13 @@ import kodlama.io.Devs.entities.Language;
 public interface LanguageService {
 	
 	public List<Language> getAll();
-	public void saveLanguage(Language language) throws Exception;
-	public Language updateLanguage(String name, Integer id);
-	public Language findLanguageById(Integer id);
-	public Language findLanguageByName(String name);
-	public void deleteLanguage(Integer id);
-	public boolean isNameExist(Language language);
-	public boolean isNameEmpty(Language language);
-	public boolean isIdExist(Language language);
+	public Language save(LanguageCreateRequest language) throws Exception;
+	public Language updateLanguage(LanguageUpdateRequest language, Integer id) throws Exception;
+	public LanguageListResponse findLanguageById(Integer id);
+	public List<LanguageListResponse> findLanguageByName(String name);
+	void deleteLanguage(Integer id) throws Exception;
+
+
 	
 
 }

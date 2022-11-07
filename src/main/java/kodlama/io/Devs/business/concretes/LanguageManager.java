@@ -3,11 +3,16 @@
  */
 package kodlama.io.Devs.business.concretes;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import kodlama.io.Devs.business.abstracts.LanguageService;
+import kodlama.io.Devs.business.requests.languages.LanguageCreateRequest;
+import kodlama.io.Devs.business.requests.languages.LanguageUpdateRequest;
+import kodlama.io.Devs.business.responses.languages.LanguageListResponse;
 import kodlama.io.Devs.dataAccess.abstracts.LanguageRepository;
 import kodlama.io.Devs.entities.Language;
 
@@ -18,68 +23,92 @@ import kodlama.io.Devs.entities.Language;
 @Service
 public class LanguageManager implements LanguageService {
 
+	LanguageRepository languageRepository;
+	
 	public LanguageManager(LanguageRepository languageRepository) {
-		super();
 		this.languageRepository = languageRepository;
 	}
 
-	LanguageRepository languageRepository;
+	
 	@Override
 	public List<Language> getAll() {
-		return languageRepository.getAll();
+		return languageRepository.findAll();
 	}
 
 	@Override
-	public void saveLanguage(Language language) throws Exception{
+	public Language save(LanguageCreateRequest language) throws Exception{
 		
-		if(language.getName().isEmpty())
-			throw new Exception("Name is empty, fill the blanks!");
-		else {
-			if(!isNameExist(language)||!isIdExist(language)) {
-				throw new Exception("Name or Id already exist. Try Again");
-			}
-			else
-				languageRepository.saveLanguage(language);
+		Language lang = new Language();
+		if(isNameExist(language.getName())) {
+			lang.setName(language.getName());
+			return languageRepository.save(lang);
+			
 		}
-
-	}
-
-	@Override
-	public Language updateLanguage(String name, Integer id) {
-			return languageRepository.updateLanguage(name, id);
-	}
-
-	@Override
-	public Language findLanguageById(Integer id) {
+		else
+			throw new Exception("Language Name is Already Exist!!");
 		
-		return languageRepository.findLanguageById(id-1);
-	}
-
-	@Override
-	public Language findLanguageByName(String name) {
-		return languageRepository.findLanguageByName(name);
-	}
-
-	@Override
-	public void deleteLanguage(Integer id) {
-		languageRepository.deleteLanguage(id);
-
-	}
-
-	@Override
-	public boolean isNameExist(Language language) {
-		return language.getName().equals(findLanguageById(language.getId()-1).getName())?false:true; 
+		
 		
 	}
 
 	@Override
-	public boolean isNameEmpty(Language language) {
-		return language.getName().isEmpty()?false:true;
+	public Language updateLanguage(LanguageUpdateRequest language, Integer id) throws Exception {
+		if(isIdExist(id)) {
+			Language lang = languageRepository.findById(id).get();
+			if(isNameExist(language.getName())) {
+				lang.setName(language.getName());
+				return lang;
+			}	
+			else
+				throw new Exception("Name is already exist!");
+		}
+		else
+			throw new Exception("LanguageId is not exist!");
+			
+		
+		
+		
+		
 	}
 
 	@Override
-	public boolean isIdExist(Language language) {
-		return language.getId().equals(findLanguageById(language.getId()-1).getId())?false:true;
+	public LanguageListResponse findLanguageById(Integer id) {
+		
+		
+		
+		return LanguageListResponse.from(languageRepository.findById(id).get());
 	}
 
+	@Override
+	public List<LanguageListResponse> findLanguageByName(String name) {
+		
+		return languageRepository.findByNameContainingIgnoreCase(name).stream()
+															          .map(LanguageListResponse::from)
+															          .collect(Collectors.toList());
+	}
+
+	@Override
+	public void deleteLanguage(Integer id) throws Exception {
+		if(isIdExist(id))
+			languageRepository.deleteById(id);
+		else
+			throw new Exception("The language with this id could not be found!");
+
+	}
+
+	public boolean isNameExist(String name) {
+		
+		if(languageRepository.findByName(name)==null)
+			return true;
+		else
+			return false;
+	}
+
+
+	public boolean isIdExist(Integer id) {
+		if(languageRepository.findById(id).get().getId()==null)
+			return false;
+		else
+			return true;
+	}
 }
