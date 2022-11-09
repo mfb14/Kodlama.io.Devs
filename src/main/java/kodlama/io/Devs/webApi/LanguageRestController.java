@@ -60,9 +60,15 @@ public class LanguageRestController {
 	public ResponseEntity<LanguageListResponse> findLanguageById(@RequestParam Integer id) {
 		return ResponseEntity.ok(languageService.findLanguageById(id));
 	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteLanguage(@PathVariable Integer id) throws Exception {
 		languageService.deleteLanguage(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/getAllWithTechnologies")
+	public ResponseEntity<?> getAllWithTechnologies(){
+		return ResponseEntity.ok(languageService.getAllwithTechs());
 	}
 }

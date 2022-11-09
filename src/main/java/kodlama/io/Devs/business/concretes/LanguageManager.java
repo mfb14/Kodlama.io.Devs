@@ -3,6 +3,7 @@
  */
 package kodlama.io.Devs.business.concretes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +12,13 @@ import org.springframework.stereotype.Service;
 import kodlama.io.Devs.business.abstracts.LanguageService;
 import kodlama.io.Devs.business.requests.languages.LanguageCreateRequest;
 import kodlama.io.Devs.business.requests.languages.LanguageUpdateRequest;
+import kodlama.io.Devs.business.responses.languageTechnologies.LanguageTechnologyResponse;
 import kodlama.io.Devs.business.responses.languages.LanguageListResponse;
+import kodlama.io.Devs.business.responses.languages.LanguageListWithTechnologyResponse;
 import kodlama.io.Devs.dataAccess.abstracts.LanguageRepository;
+import kodlama.io.Devs.dataAccess.abstracts.LanguageTechnologyRepository;
 import kodlama.io.Devs.entities.Language;
+import kodlama.io.Devs.entities.LanguageTechnology;
 
 /**
  * @author Mustafa Furkan BİLEN
@@ -23,9 +28,11 @@ import kodlama.io.Devs.entities.Language;
 public class LanguageManager implements LanguageService {
 
 	LanguageRepository languageRepository;
+	LanguageTechnologyRepository languageTechnologyRepository;
 	
-	public LanguageManager(LanguageRepository languageRepository) {
+	public LanguageManager(LanguageRepository languageRepository,LanguageTechnologyRepository languageTechnologyRepository) {
 		this.languageRepository = languageRepository;
+		this.languageTechnologyRepository=languageTechnologyRepository;
 	}
 
 	
@@ -101,5 +108,26 @@ public class LanguageManager implements LanguageService {
 			return false;
 		else
 			return true;
+	}
+
+
+	@Override
+	public List<LanguageListWithTechnologyResponse> getAllwithTechs() {
+		List<Language> lang = languageRepository.findAll();
+		List<LanguageTechnology> tech = languageTechnologyRepository.findAll();
+		
+		List<LanguageListWithTechnologyResponse> list = new ArrayList<LanguageListWithTechnologyResponse>();
+		
+		for(Language language : lang) {
+			List<LanguageTechnologyResponse> techList = new ArrayList<LanguageTechnologyResponse>();
+			
+			for(LanguageTechnology technology:tech) {
+				if(technology.getLanguage().getId()==language.getId())
+					techList.add(LanguageTechnologyResponse.from(technology));
+			}
+			list.add(LanguageListWithTechnologyResponse.from(language));
+		}
+		return list;
+		
 	}
 }

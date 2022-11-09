@@ -8,6 +8,7 @@ import java.util.List;
 import kodlama.io.Devs.business.requests.languages.LanguageCreateRequest;
 import kodlama.io.Devs.business.requests.languages.LanguageUpdateRequest;
 import kodlama.io.Devs.business.responses.languages.LanguageListResponse;
+import kodlama.io.Devs.business.responses.languages.LanguageListWithTechnologyResponse;
 import kodlama.io.Devs.entities.Language;
 
 /**
@@ -22,6 +23,7 @@ public interface LanguageService {
 	public LanguageListResponse findLanguageById(Integer id);
 	public List<LanguageListResponse> findLanguageByName(String name);
 	void deleteLanguage(Integer id) throws Exception;
+	public List<LanguageListWithTechnologyResponse> getAllwithTechs();
 
 
 	
